@@ -1,11 +1,13 @@
 'use strict'
+const util = require('util')
+
 class Logger {
   constructor(component) { // component is likely to corresponmd to a modeul, but does not have to
     this.component = component;
   }
   _log(level, functionName, context, ...args) {
     args.unshift(new Date().toISOString(), level, this.component, functionName, context['request-id'] || 'no-request-id', context.user || 'INCOGNITO')
-    console.log.apply(null, args)
+    console.log.apply(null, args.map(x=>typeof x == 'object' ? util.inspect(x,{depth: null}) : x))
   }
   info(...args) {
     args.unshift('info')
